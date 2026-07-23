@@ -1,24 +1,14 @@
 from flask import Flask, render_template, request, jsonify
-import json
-import os
+import sqlite3
 from datetime import datetime
 
 app = Flask(__name__)
 
-DB_FILE = "database.json"
+DB = "event_data.db"
 
 
-def load_database():
-    if not os.path.exists(DB_FILE):
-        return []
-
-    with open(DB_FILE, "r", encoding="utf-8") as file:
-        return json.load(file)
-
-
-def save_database(data):
-    with open(DB_FILE, "w", encoding="utf-8") as file:
-        json.dump(data, file, ensure_ascii=False, indent=4)
+def get_db():
+    return sqlite3.connect(DB)
 
 
 @app.route("/")
@@ -30,32 +20,41 @@ def home():
 def register():
     data = request.json
 
-    users = load_database()
+    conn = get_db()
+    cursor = conn.cursor()
 
-    new_user = {
-        "name": data.get("name", ""),
-        "gameid": data.get("gameid", ""),
-        "phone": data.get("phone", ""),
-        "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    }
+    cursor.execute(
+        """
+        INSERT INTO users (name, phone, gameid, time)
+        VALUES (?, ?, ?, ?)
+        """,
+        (
+            data.get("name", ""),
+            data.get("phone", ""),
+            data.get("gameid", ""),
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        )
+    )
 
-    users.append(new_user)
-    save_database(users)
+    conn.commit()
+    conn.close()
 
-    return jsonify({
-        "success": True,
-        "message": "ثبت شد"
-    })
+    return jsonify({"success": True})
 
 
 @app.route("/api/users")
 def users():
-    return jsonify(load_database())
+    conn = get_db()
+    cursor = conn.cursor()
 
+    cursor.execute(
+        "SELECT id, name, phone, gameid, time FROM users"
+    )
 
-@app.route("/admin")
-def admin():
-    return render_template("admin.html")
+    rows = cursor.fetchall()
+    conn.close()
+
+    return jsonify(rows)
 
 
 if __name__ == "__main__":
