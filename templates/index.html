@@ -343,7 +343,29 @@
             };
 
             let list = JSON.parse(localStorage.getItem(KEY)) || [];
-            list.unshift(record);
+            fetch("/api/register", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        name: record.name,
+        gameid: record.gameId,
+        phone: record.phone
+    })
+})
+.then(res => res.json())
+.then(data => {
+    if (data.success) {
+        document.getElementById('claimForm').style.display = 'none';
+        document.getElementById('successMessage').style.display = 'block';
+        showToast("✅ درخواست ثبت شد!");
+    }
+})
+.catch(err => {
+    console.log(err);
+    alert("خطا در ثبت اطلاعات");
+});
             localStorage.setItem(KEY, JSON.stringify(list));
 
             document.getElementById('claimForm').style.display = 'none';
@@ -420,7 +442,7 @@
             const idx = list.findIndex(i => i.id === id);
             if (idx !== -1) {
                 list[idx].status = status;
-                localStorage.setItem(KEY, JSON.stringify(list));
+                
                 loadTable();
                 showToast("تغییر وضعیت ثبت شد");
             }
