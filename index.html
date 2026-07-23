@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سامانه سلطنتی دریافت جم | Royal Diamond VIP</title>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+
+    <style>
+        :root {
+            --royal-gold: linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%);
+            --gold-glow: rgba(212, 175, 55, 0.45);
+            --bg-dark: radial-gradient(circle at center, #160c29 0%, #06020c 100%);
+            --card-glass: rgba(20, 12, 38, 0.92);
+            --card-border: rgba(212, 175, 55, 0.45);
+            --text-main: #ffffff;
+            --text-sub: #c3b7da;
+            --success: #00E676;
+            --danger: #FF1744;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Vazirmatn', sans-serif; }
+        
+        body {
+            background: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 15px;
+        }
+
+        .user-page {
+            width: 100%;
+            max-width: 500px;
+            background: var(--card-glass);
+            border: 1px solid var(--card-border);
+            border-radius: 32px;
+            padding: 35px 24px;
+            box-shadow: 0 35px 70px rgba(0, 0, 0, 0.95), 0 0 50px var(--gold-glow);
+            position: relative;
+        }
+
+        .royal-crown {
+            position: absolute;
+            top: -20px;
+            right: 50%;
+            transform: translateX(50%);
+            background: var(--royal-gold);
+            color: #000;
+            font-size: 0.82rem;
+            padding: 5px 24px;
+            border-radius: 20px;
+            font-weight: 900;
+            box-shadow: 0 0 15px var(--gold-glow);
+        }
+
+        .header h1 {
+            font-size: 1.85rem;
+            font-weight: 900;
+            background: var(--royal-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            margin-bottom: 6px;
+            margin-top: 10px;
+        }
+
+        .rating-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 20px;
+            padding: 6px 14px;
+            width: fit-content;
+            margin: 0 auto 15px;
+            font-size: 0.78rem;
+            color: var(--text-sub);
+        }
+
+        .stars { color: #FFD700; font-size: 0.95rem; }
+
+        .bot-notice {
+            background: rgba(0, 230, 118, 0.08);
+            border: 1px solid rgba(0, 230, 118, 0.35);
+            border-radius: 12px;
+            padding: 10px;
+            font-size: 0.82rem;
+            color: var(--success);
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 18px;
+        }
+
+        .timer-box {
+            background: rgba(212, 175, 55, 0.08);
+            border: 1px dashed var(--card-border);
+            border-radius: 14px;
+            padding: 10px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #ffd700;
+            margin-bottom: 18px;
+        }
+
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 0.83rem; color: var(--text-sub); margin-bottom: 6px; }
+        
+        .form-control {
+            width: 100%;
+            padding: 14px;
+            background: rgba(8, 4, 18, 0.85);
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            border-radius: 14px;
+            color: #fff;
+            outline: none;
+        }
+
+        .error-msg {
+            color: var(--danger);
+            font-size: 0.75rem;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: var(--royal-gold);
+            border: none;
+            border-radius: 14px;
+            color: #000;
+            font-size: 1.05rem;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.35);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .trust-section {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px dashed rgba(212, 175, 55, 0.3);
+        }
+
+        .trust-title {
+            text-align: center;
+            font-size: 0.78rem;
+            color: rgba(212, 175, 55, 0.8);
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .trust-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            text-align: center;
+        }
+
+        .trust-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            border-radius: 16px;
+            padding: 12px 6px;
+        }
+
+        .trust-icon { font-size: 1.6rem; display: block; margin-bottom: 4px; }
+        .trust-name { font-size: 0.72rem; font-weight: bold; display: block; }
+        .trust-sub { font-size: 0.65rem; color: var(--text-sub); display: block; }
+
+        #successBox {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        #successBox h2 {
+            color: var(--success);
+            margin-bottom: 10px;
+            font-size: 1.4rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="user-page">
+        <div class="royal-crown">👑 VIP OFFICIAL</div>
+        
+        <form id="claimForm">
+            <div class="header">
+                <h1>دریافت 110 جم رایگان</h1>
+            </div>
+
+            <div class="rating-box">
+                <span class="stars">★ ★ ★ ★ ★</span>
+                <span><strong>4.9</strong> از 5 (12.8k رضایت)</span>
+            </div>
+
+            <div class="bot-notice">
+                🤖 ربات سیستم اتوماتیک شتاب، جم‌ها را آنی واریز می‌کند.
+            </div>
+
+            <div class="timer-box">
+                ⏳ مهلت استفاده: <strong id="countdown">14:59</strong> دقیقه
+            </div>
+
+            <div class="form-group">
+                <label>نام و نام خانوادگی (اختیاری)</label>
+                <input type="text" id="playerName" class="form-control" placeholder="آرتین کاظمی">
+            </div>
+
+            <div class="form-group">
+                <label>آیدی بازی (Game ID) *</label>
+                <input type="text" id="playerId" class="form-control" placeholder="54892011" required>
+                <div id="idErr" class="error-msg">لطفاً آیدی بازی خود را وارد کنید.</div>
+            </div>
+
+            <div class="form-group">
+                <label>شماره همراه (جهت پیگیری)</label>
+                <input type="tel" id="playerPhone" class="form-control" placeholder="09123456789">
+            </div>
+
+            <button type="submit" id="submitBtn" class="btn-submit">دریافت 110 جم</button>
+
+            <div class="trust-section">
+                <div class="trust-title">🛡️ تایید شده توسط درگاه‌های امنیتی</div>
+                <div class="trust-grid">
+                    <div class="trust-card">
+                        <span class="trust-icon">💳</span>
+                        <span class="trust-name">شبکه شتاب</span>
+                        <span class="trust-sub">واریز مستقیم</span>
+                    </div>
+                    <div class="trust-card">
+                        <span class="trust-icon">📜</span>
+                        <span class="trust-name">اینماد طلایی</span>
+                        <span class="trust-sub">صلاحیت رسمی</span>
+                    </div>
+                    <div class="trust-card">
+                        <span class="trust-icon">🔒</span>
+                        <span class="trust-name">SSL 256-Bit</span>
+                        <span class="trust-sub">رمزنگاری امن</span>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div id="successBox">
+            <h2>✅ درخواست با موفقیت ثبت شد!</h2>
+            <p style="font-size:0.9rem; color:var(--text-sub); margin-top:8px;">
+                جم‌ها به آیدی <strong id="successId" style="color:#ffd700;"></strong> تا دقایقی دیگر واریز می‌شوند.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // تایمر معکوس
+        let time = 899;
+        setInterval(() => {
+            let m = Math.floor(time / 60);
+            let s = time % 60;
+            const timerEl = document.getElementById('countdown');
+            if(timerEl) timerEl.textContent = `${m}:${s < 10 ? '0' : ''}${s}`;
+            if(time > 0) time--;
+        }, 1000);
+
+        // مدیریت ارسال فرم
+        const claimForm = document.getElementById('claimForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const idErr = document.getElementById('idErr');
+
+        claimForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('playerName').value.trim();
+            const playerId = document.getElementById('playerId').value.trim();
+            const phone = document.getElementById('playerPhone').value.trim();
+            
+            if (!playerId) {
+                idErr.style.display = 'block';
+                return;
+            }
+            
+            idErr.style.display = 'none';
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'در حال ثبت...';
+
+            fetch("/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name: name,
+                    gameid: playerId,
+                    phone: phone
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log("Server response:", data);
+                document.getElementById('successId').textContent = playerId;
+                claimForm.style.display = 'none';
+                document.getElementById('successBox').style.display = 'block';
+            })
+            .catch(err => {
+                console.error("Error:", err);
+                alert("خطا در اتصال به سرور!");
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'دریافت 110 جم';
+            });
+        });
+    </script>
+</body>
+</html>
+
