@@ -387,57 +387,52 @@
         }
 
         // بارگذاری و محاسبه آمار
-        function loadTable() {
-            const tbody = document.getElementById('tableBody');
-            const search = document.getElementById('searchBox').value.trim().toLowerCase();
-            let list = JSON.parse(localStorage.getItem(KEY)) || [];
+        async function loadTable() {
+    const tbody = document.getElementById('tableBody');
+    const search = document.getElementById('searchBox').value.trim().toLowerCase();
 
-            // آمار
-            document.getElementById('statTotal').textContent = list.length;
-            document.getElementById('statPending').textContent = list.filter(i => i.status === 'pending').length;
-            document.getElementById('statApproved').textContent = list.filter(i => i.status === 'approved').length;
+    let response = await fetch("/api/users");
+    let list = await response.json();
 
-            tbody.innerHTML = '';
+    document.getElementById('statTotal').textContent = list.length;
+    document.getElementById('statPending').textContent = 0;
+    document.getElementById('statApproved').textContent = 0;
 
-            const filtered = list.filter(i => 
-                i.gameId.toLowerCase().includes(search) ||
-                i.name.toLowerCase().includes(search) ||
-                i.phone.toLowerCase().includes(search)
-            );
+    tbody.innerHTML = '';
 
-            if (filtered.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">هیچ داده‌ای یافت نشد</td></tr>';
-                return;
-            }
+    const filtered = list.filter(i =>
+        (i[1] || "").toLowerCase().includes(search) ||
+        (i[3] || "").toLowerCase().includes(search) ||
+        (i[2] || "").toLowerCase().includes(search)
+    );
 
-            filtered.forEach((item, index) => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td>${item.name}</td>
-                        <td><strong style="color:#00E676">${item.gameId}</strong> <button class="btn-copy" onclick="copy('${item.gameId}')">کپی</button></td>
-                        <td>${item.phone} ${item.phone !== 'ثبت نشده' ? `<button class="btn-copy" onclick="copy('${item.phone}')">کپی</button>` : ''}</td>
-                        <td>${item.device}</td>
-                        <td style="font-size:0.75rem;">${item.time}</td>
-                        <td>
-                            <select class="status-select" onchange="changeStatus(${item.id}, this.value)">
-                                <option value="pending" ${item.status === 'pending' ? 'selected' : ''}>🟡 در انتظار</option>
-                                <option value="approved" ${item.status === 'approved' ? 'selected' : ''}>🟢 واریز شد</option>
-                                <option value="rejected" ${item.status === 'rejected' ? 'selected' : ''}>🔴 رد شده</option>
-                            </select>
-                        </td>
-                        <td><button class="btn-del" onclick="delItem(${item.id})">حذف</button></td>
-                    </tr>
-                `;
-            });
-        }
+    if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">هیچ داده‌ای یافت نشد</td></tr>';
+        return;
+    }
 
-        function copy(text) {
-            navigator.clipboard.writeText(text);
-            showToast("📋 کپی شد: " + text);
-        }
+    filtered.forEach((item, index) => {
+        tbody.innerHTML += `
+        <tr>
+            <td>${index + 1}</td>
+            <td>${item[1]}</td>
+            <td>${item[3]}</td>
+            <td>${item[2]}</td>
+            <td>📱</td>
+            <td>${item[4] || ""}</td>
+            <td>🟡 ثبت شده</td>
+            <td>-</td>
+        </tr>`;
+         </tr>`;
+    });
+}
 
-        function changeStatus(id, status) {
+function copy(text) {
+    navigator.clipboard.writeText(text);
+    showToast("📋 کپی شد: " + text);
+}
+
+function changeStatus(id, status) {
             let list = JSON.parse(localStorage.getItem(KEY)) || [];
             const idx = list.findIndex(i => i.id === id);
             if (idx !== -1) {
